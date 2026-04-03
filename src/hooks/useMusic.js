@@ -59,6 +59,7 @@ export const useMusic = () => {
       setcurrentTrack(allSongs[nextindex])
       return nextindex
     })
+    setIsplaying(false)
   }
   const prevTrack = () => {
     setCurrentTrackIndex((prev) => {
@@ -66,6 +67,7 @@ export const useMusic = () => {
       setcurrentTrack(allSongs[nextindex])
       return nextindex
     })
+      setIsplaying(false)
   }
 
   const play = () => setIsplaying(true)

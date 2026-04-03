@@ -22,12 +22,29 @@ const audioRef=useRef()
       
       
       } = useMusic()
+
+      const handletimeChange= (e)=>{
+        
+              const audio=audioRef.current
+    if(!audio) return;
+    const newTime= parseFloat(e.target.value)
+    audio.currentTime=newTime
+    setCurrentTime(newTime)
+
+      }
  
 
 useEffect(()=>{
       const audio=audioRef.current
     if(!audio) return;
-    
+
+  audio.load()
+    if(isPlaying){
+      audio.play().catch((err)=>console.log(err))
+    }else{
+      audio.pause( )
+
+    }
   
 },[isPlaying])
 
@@ -41,17 +58,23 @@ useEffect(()=>{
 
     }
       const handleTimeUpdate = ()=>{
+        setCurrentTime(audio.currentTime)
       
     }
       const handleEnded = ()=>{
       
+        nextTrack()
     }
 
     audio.addEventListener("loadedmetadata",handleLoadedMetadata)
+      audio.addEventListener("timeupdate",handleTimeUpdate)
+            audio.addEventListener("ended",handleEnded)
 
 
     return  () =>{
       audio.removeEventListener("loadedmetadata",handleLoadedMetadata) 
+          audio.removeEventListener("timeupdate",handleTimeUpdate)
+           audio.removeEventListener("ended",handleEnded)
     }
 
   },[currentTrack,setDuration,setCurrentTime])
@@ -70,7 +93,8 @@ useEffect(()=>{
         max={duration || 0} 
         step="0.1"
          className='progress-bar'
-         onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
+        //  onChange={(e) => setCurrentTime(parseFloat(e.target.value))}
+        onChange={handletimeChange}
         //  style={}
          />
         <span className="time">{formatTime(duration)}</span>
