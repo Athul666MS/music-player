@@ -1,4 +1,4 @@
-import { createContext,useContext } from "react";
+import { createContext,useContext,useState } from "react";
 
 
 const MusicContext = createContext()
@@ -35,7 +35,7 @@ const songs = [
   }
 ];
 
-export const MusicProvider = ({childern})=>{
+export const MusicProvider = ({children })=>{
       const [allSongs, setAllSongs] = useState(songs);
   const [currentTrack, setcurrentTrack] = useState(songs[0]);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -49,7 +49,7 @@ export const MusicProvider = ({childern})=>{
   const handlePlaySong = (song, index) => {
     setCurrentTrackIndex(index)
     setcurrentTrack(song)
-
+setIsplaying(true)
   }
 
   const formatTime = (time) => {
@@ -74,7 +74,7 @@ export const MusicProvider = ({childern})=>{
       setcurrentTrack(allSongs[nextindex])
       return nextindex
     })
-    setIsplaying(false)
+    setIsplaying(true)
   }
   const prevTrack = () => {
     setCurrentTrackIndex((prev) => {
@@ -82,19 +82,23 @@ export const MusicProvider = ({childern})=>{
       setcurrentTrack(allSongs[nextindex])
       return nextindex
     })
-      setIsplaying(false)
+      setIsplaying(true)
   }
 
   const play = () => setIsplaying(true)
 
   const pause = () => setIsplaying(false)
-    return <MusicContext.Provider>{childern}</MusicContext.Provider>
+    return <MusicContext.Provider value={ {   formatTime, allSongs,
+    currentTrack, currentTrackIndex,
+    handlePlaySong, currentTime, setCurrentTime
+    , duration, setDuration, nextTrack, prevTrack,play,pause,isPlaying,volume,setVolume,progressPrecentage,
+     toggleMute}}>{children }</MusicContext.Provider>
 }
 
 
 
 
-const useMusic = () => {
+export const useMusic = () => {
   const contextvalue = useContext(MusicContext)
 
   if (!contextvalue) {

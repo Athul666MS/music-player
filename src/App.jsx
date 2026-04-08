@@ -4,11 +4,13 @@ import { Playlists } from "./components/Playlists";
 
 import { BrowserRouter, Routes, Route } from "react-router";
 import "./App.css";
+import { MusicProvider } from "./contexts/MusicContext";
 
 
 function App() {
   return (
     <BrowserRouter>
+    <MusicProvider>
      
         <div className="app">
          
@@ -24,6 +26,7 @@ function App() {
             </div>
           </main>
         </div>
+          </MusicProvider>
 
     </BrowserRouter>
   );

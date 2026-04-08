@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
-import { useMusic } from '../hooks/useMusic'
+
 import { useRef } from 'react'
+import { useMusic } from '../contexts/MusicContext'
 export function MusicPlayer() {
 
   const audioRef = useRef()
@@ -23,7 +24,7 @@ export function MusicPlayer() {
 
 
 
-  } = useMusic()
+  } =useMusic()
 
   const handletimeChange = (e) => {
 
@@ -32,6 +33,7 @@ export function MusicPlayer() {
     const newTime = parseFloat(e.target.value)
     audio.currentTime = newTime
     setCurrentTime(newTime)
+   
 
   }
   const handlevolumeChange = (e) => {
@@ -43,21 +45,17 @@ export function MusicPlayer() {
 
   }
 
+useEffect(() => {
+  const audio = audioRef.current
+  if (!audio) return;
 
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return;
+  if (isPlaying) {
+    audio.play().catch((err) => console.log(err))
+  } else {
+    audio.pause()
+  }
 
-
-    if (isPlaying) {
-      audio.play().catch((err) => console.log(err))
-    } else {
-      audio.pause()
-
-    }
-
-  }, [isPlaying])
-
+}, [isPlaying, currentTrack])  
   useEffect(() => {
 
     const audio = audioRef.current
@@ -86,7 +84,7 @@ export function MusicPlayer() {
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata)
       audio.removeEventListener("timeupdate", handleTimeUpdate)
       audio.removeEventListener("ended", handleEnded)
-          audio.removeEventListener("loadedmetadata", handleLoadedMetadata)
+          audio.removeEventListener("canplay", handleLoadedMetadata)
     }
 
   }, [currentTrack, setDuration, setCurrentTime,nextTrack])
@@ -100,7 +98,7 @@ useEffect(() => {
         const audio = audioRef.current
     if (!audio) return;
 
-    audio.load()
+
     setCurrentTime(0)
     setDuration(0)
 
