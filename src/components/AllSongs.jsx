@@ -20,6 +20,7 @@ export const AllSongs = () => {
           </div>
         ))}
       </div>
+      
     </div>
   );
 };
